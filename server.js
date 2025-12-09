@@ -136,6 +136,20 @@ async function handleJsonRpc(req, res) {
     let result;
 
     switch (method) {
+      case 'initialize':
+        // MCP 初始化方法
+        result = {
+          protocolVersion: '2024-11-05',
+          capabilities: {
+            tools: {}
+          },
+          serverInfo: {
+            name: 'shopify-mcp-server',
+            version: '1.0.0'
+          }
+        };
+        break;
+
       case 'tools/list':
         result = { tools };
         break;
