@@ -267,10 +267,15 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 启动服务器
-app.listen(PORT, () => {
-  console.log(`Shopify MCP Server running on port ${PORT}`);
-  console.log(`Store: ${SHOPIFY_STORE}`);
-  console.log(`Access Token: ${SHOPIFY_ACCESS_TOKEN ? 'Configured' : 'NOT CONFIGURED'}`);
-});
+// 导出给 Vercel 使用
+export default app;
+
+// 本地开发时启动服务器
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`Shopify MCP Server running on port ${PORT}`);
+    console.log(`Store: ${SHOPIFY_STORE}`);
+    console.log(`Access Token: ${SHOPIFY_ACCESS_TOKEN ? 'Configured' : 'NOT CONFIGURED'}`);
+  });
+}
 
