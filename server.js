@@ -155,7 +155,8 @@ async function handleJsonRpc(req, res) {
 
       case 'notifications/initialized':
         // MCP 初始化通知，不需要响应（通知永远不应该有响应）
-        return res.status(200).end();
+        // 返回 204 No Content，符合 HTTP 规范
+        return res.status(204).end();
 
       case 'tools/list':
         result = { tools };
@@ -174,7 +175,8 @@ async function handleJsonRpc(req, res) {
 
     // 如果是通知，不返回响应体
     if (isNotification) {
-      return res.status(200).end();
+      // 返回 204 No Content，符合 HTTP 规范
+      return res.status(204).end();
     }
 
     // 返回 JSON-RPC 响应
@@ -188,7 +190,8 @@ async function handleJsonRpc(req, res) {
     
     // 如果是通知出错，不返回错误响应
     if (isNotification) {
-      return res.status(200).end();
+      // 返回 204 No Content，符合 HTTP 规范
+      return res.status(204).end();
     }
 
     res.json({
