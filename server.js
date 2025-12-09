@@ -132,6 +132,9 @@ async function handleJsonRpc(req, res) {
     });
   }
 
+  // 处理通知（没有 id 字段的请求）
+  const isNotification = id === undefined || id === null;
+
   try {
     let result;
 
@@ -150,6 +153,10 @@ async function handleJsonRpc(req, res) {
         };
         break;
 
+      case 'notifications/initialized':
+        // MCP 初始化通知，不需要响应（通知永远不应该有响应）
+        return res.status(200).end();
+
       case 'tools/list':
         result = { tools };
         break;
@@ -165,6 +172,12 @@ async function handleJsonRpc(req, res) {
         throw new Error(`Unknown method: ${method}`);
     }
 
+    // 如果是通知，不返回响应体
+    if (isNotification) {
+      return res.status(200).end();
+    }
+
+    // 返回 JSON-RPC 响应
     res.json({
       jsonrpc: '2.0',
       result,
@@ -172,10 +185,16 @@ async function handleJsonRpc(req, res) {
     });
   } catch (error) {
     console.error('Error handling request:', error);
+    
+    // 如果是通知出错，不返回错误响应
+    if (isNotification) {
+      return res.status(200).end();
+    }
+
     res.json({
       jsonrpc: '2.0',
       error: createError(-32603, 'Internal error', error.message),
-      id
+      id: id || null
     });
   }
 }
